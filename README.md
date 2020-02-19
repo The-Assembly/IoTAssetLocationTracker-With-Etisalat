@@ -1,0 +1,2 @@
+# IoTAssetLocationTracker-With-Etisalat
+22 Feb 2020 @ in5 -  Hands-on Internet Of Things workshop with Etisalat Digital. At this session, learn how to incorporate ​location tracking​ into your IoT solution, including how to: 1. Set up GPS modules on remote edge devices &amp; monitor location over the internet   2. Sync and model location data streams for multiple assets to the cloud   3. Build a consolidated web-based user interface using extensions to display maps &amp; position simultaneously for all assets.
