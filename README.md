@@ -81,13 +81,50 @@ At this session, learn how to incorporate ​location tracking​ into your IoT 
 	9. Change binding of QueryPropertyHistory->All Data to RouteData property of Maps widget
 	10. Select RouteLocationField as GPS, select ShowRoute property & view mashup
 
+## Connect the Pi & GPS module
+	1. Connect pins on GPS module - VCC to 5V on Pi, TX with RX of Pi (GPS transmits, Pi receives), GND with GND of Pi, keep RX empty
+	2. Insert SD card into Pi and power up
+	3. Backup (optional) -
+		sudo cp /boot/cmdline.txt /boot/cmdline_backup.txt
+	4. Edit the file
+		sudo nano /boot/cmdline.txt
+	5. Replace content of file with 
+		dwc_otg.lpm_enable=0 console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait quiet splash plymouth.ignore-serial-consoles
+	6. To save press ctrl-X, select y and enter
+	7. Check whether LED on GPS module is blinking (indicates it's receiving coordinates) & reboot Pi (sudo reboot)
+	8. Run command to see coordinates stream (ctrl C to stop) - 
+		sudo cat /dev/ttyAMA0
 
+## Send GPS data to Thingworx in Python
+	1. Disable console as by default Pi uses serial port for console login but we need serial port for data from GPS module
+		ls -l /dev
+		sudo systemctl stop serial-getty@ttyAMA0.service
+		sudo systemctl disable serial-getty@ttyAMA0.service
+	2. Install Python library
+		pip install pynmea2
+	3. Code the following python script (replace <server>, <appKey>, <username>, <password>, <userid>) - 
+		import serial
+		import time
+		import string
+		import pynmea2
+		import requests
+		import json
+
+		url = 'http://<server>/Thingworx'
+		headers = { 'Content-Type': 'application/json', 'appKey': '<appKey>','Accept': 'text/html'}
+
+		while True:
+	    		port="/dev/ttyAMA0"
+    			ser=serial.Serial(port, baudrate=9600, timeout=0.5)
+    			dataout = pynmea2.NMEAStreamReader()
+    			newdata=ser.readline()
+
+    			if newdata[0:6] == "$GPGLL":
+        			newmsg=pynmea2.parse(newdata)
+        			lat=newmsg.latitude
+        			lng=newmsg.longitude
+        			locstr = "Latitude=" + str(lat) + "and Longitude=" + str(lng)
+       				print(locstr)
+        			response = requests.put (url+'/Things/MyAsset_<userid>/Properties/*',json = {"GPS":{"longitude":lng, "latitude":lat, "elevation":0.5 , "units": "WGS84"}}, auth = (<username>,<password>) ,headers=headers, verify=False)
 	
-	
-
-	
-
-
-
-
-
+	4. Run the script - this will send a stream of coordinates to Thingworx (adjust timeout as desired)
