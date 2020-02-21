@@ -107,32 +107,10 @@ At this session, learn how to incorporate ​location tracking​ into your IoT 
 	1. Disable console as by default Pi uses serial port for console login but we need serial port for data from GPS module
 		ls -l /dev
 		sudo systemctl stop serial-getty@ttyAMA0.service
-		sudo systemctl disable serial-getty@ttyAMA0.service
-	2. Install Python library
-		pip install pynmea2
-	3. Code the following python script (replace <server>, <appKey>, <username>, <password>, <userid>) - 
-		import serial
-		import time
-		import string
-		import pynmea2
-		import requests
-		import json
-
-		url = 'http://<server>/Thingworx'
-		headers = { 'Content-Type': 'application/json', 'appKey': '<appKey>','Accept': 'text/html'}
-
-		while True:
-	    		port="/dev/ttyAMA0"
-			ser=serial.Serial(port, baudrate=9600, timeout=0.5)
-			dataout = pynmea2.NMEAStreamReader()
-			newdata=ser.readline()
-			
-			if newdata[0:6] == "$GPGLL":	
-				newmsg=pynmea2.parse(newdata)		
-				lat=newmsg.latitude
-				lng=newmsg.longitude
-				locstr = "Latitude=" + str(lat) + "and Longitude=" + str(lng)
-				print(locstr)
-				response = requests.put (url+'/Things/MyAsset_<userid>/Properties/*',json = {"GPS":{"longitude":lng, "latitude":lat, "elevation":0.5 , "units": "WGS84"}}, auth = (<username>,<password>) ,headers=headers, verify=False)
-	
-	4. Run the script - this will send a stream of coordinates to Thingworx (adjust timeout as desired)
+		sudo systemctl disable serial-getty@ttyAMA0.servic
+	2. Clone the github repository onto your Pi
+		git clone https://github.com/The-Assembly/IoTAssetLocationTracker-With-Etisalat
+	3. Install the required libraries 
+		pip install -r requirements.txt
+	4. Run the FinalCode.py script - this will send a stream of coordinates to Thingworx (adjust timeout as desired)
+		python FinalCode.py
