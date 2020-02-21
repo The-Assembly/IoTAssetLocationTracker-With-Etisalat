@@ -84,15 +84,23 @@ At this session, learn how to incorporate ​location tracking​ into your IoT 
 ## Connect the Pi & GPS module
 	1. Connect pins on GPS module - VCC to 5V on Pi, TX with RX of Pi (GPS transmits, Pi receives), GND with GND of Pi, keep RX empty
 	2. Insert SD card into Pi and power up
-	3. Backup (optional) -
+	3. Edit the config.txt file - 
+		 sudo nano /boot/config.txt 
+	4. Add the following to the file - 
+		dtparam=spi=on
+		dtoverlay=pi3-disable-bt
+		core_freq=250
+		enable_uart=1
+		force_turbo=1
+	5. Backup (optional) -
 		sudo cp /boot/cmdline.txt /boot/cmdline_backup.txt
-	4. Edit the file
+	6. Edit the file
 		sudo nano /boot/cmdline.txt
-	5. Replace content of file with 
+	7. Replace content of file with 
 		dwc_otg.lpm_enable=0 console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait quiet splash plymouth.ignore-serial-consoles
-	6. To save press ctrl-X, select y and enter
-	7. Check whether LED on GPS module is blinking (indicates it's receiving coordinates) & reboot Pi (sudo reboot)
-	8. Run command to see coordinates stream (ctrl C to stop) - 
+	8. To save press ctrl-X, select Y and enter
+	9. Check whether LED on GPS module is blinking (indicates it's receiving coordinates) & reboot Pi (sudo reboot)
+	10. Run command to see coordinates stream (ctrl C to stop) - 
 		sudo cat /dev/ttyAMA0
 
 ## Send GPS data to Thingworx in Python
