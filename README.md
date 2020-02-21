@@ -115,7 +115,7 @@ At this session, learn how to incorporate ​location tracking​ into your IoT 
 
 		while True:
 	    		port="/dev/ttyAMA0"
-    			ser=serial.Serial(port, baudrate=9600, timeout=0.5)
+			ser=serial.Serial(port, baudrate=9600, timeout=0.5)
     			dataout = pynmea2.NMEAStreamReader()
     			newdata=ser.readline()
 
