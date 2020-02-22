@@ -14,6 +14,6 @@ while True:
 		
 		lat=newmsg.latitude
 		lng=newmsg.longitude
-		locstr = "Latitude=" + str("{0:.4f}".format(lat)) + "and Longitude=" + str("{0:.4f}".format(lng))
+		locstr = "Latitude=" + str(lat) + "and Longitude=" + str(lng)
 		print(locstr)
 		
