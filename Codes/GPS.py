@@ -10,8 +10,10 @@ while True:
 	newdata=ser.readline()
 		
 	if newdata[0:6] == "$GPGLL":	
-		newmsg=pynmea2.parse(newdata)		
+		newmsg=pynmea2.parse(newdata)	
+		
 		lat=newmsg.latitude
 		lng=newmsg.longitude
-		locstr = "Latitude=" + str(lat) + "and Longitude=" + str(lng)
+		locstr = "Latitude=" + str("{0:.4f}".format(lat)) + "and Longitude=" + str("{0:.4f}".format(lng))
 		print(locstr)
+		
